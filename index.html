@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#060a13">
+<title>PropEdge</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#060a13;--bg1:#0c1220;--bg2:#111a2e;--tx:#e2e8f0;--tx2:#94a3b8;--tx3:#64748b;--gr:#34d399;--grA:rgba(52,211,153,.15);--rd:#f87171;--rdA:rgba(248,113,113,.15);--bl:#38bdf8;--blA:rgba(56,189,248,.13);--yl:#fbbf24;--ylA:rgba(251,191,36,.13);--vi:#a78bfa;--M:'JetBrains Mono',monospace;--S:'DM Sans',system-ui,sans-serif}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--tx);font-family:var(--S);-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:0;height:0}
+.app{max-width:520px;margin:0 auto;padding:max(env(safe-area-inset-top,12px),12px) 14px calc(env(safe-area-inset-bottom,0px)+80px)}
+.loading{text-align:center;padding:60px 20px;color:var(--tx3)}
+.loading h2{font:700 20px var(--M);background:linear-gradient(135deg,var(--bl),var(--vi));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:12px}
+.loading p{font:400 12px var(--S);margin-bottom:20px}
+.lbar{height:3px;background:var(--bg2);border-radius:2px;overflow:hidden;max-width:200px;margin:0 auto}
+.lfill{height:100%;background:linear-gradient(90deg,var(--bl),var(--vi));border-radius:2px;animation:load 1.5s ease-in-out infinite}
+@keyframes load{0%{width:0}50%{width:80%}100%{width:100%}}
+.error{text-align:center;padding:40px;color:var(--rd);font:400 13px var(--S)}
+.error button{margin-top:12px;padding:8px 20px;background:var(--blA);border:1px solid rgba(56,189,248,.3);color:var(--bl);border-radius:8px;font:500 11px var(--M);cursor:pointer}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <div class="loading">
+    <h2>PropEdge</h2>
+    <p>Loading dashboard...</p>
+    <div class="lbar"><div class="lfill"></div></div>
+  </div>
+</div>
+<script>
+// PropEdge Dashboard — Data-Fetching Version
+// Loads today.json, live.json, and summary.json from data/ folder
+
+const BASE = window.location.pathname.replace(/\/index\.html$/, '').replace(/\/$/, '');
+
+async function fetchJSON(path) {
+  const resp = await fetch(`${BASE}/${path}?t=${Date.now()}`);
+  if (!resp.ok) throw new Error(`${path}: ${resp.status}`);
+  return resp.json();
+}
+
+async function init() {
+  const app = document.getElementById('app');
+
+  try {
+    // Load data in parallel
+    const [summary, today, live] = await Promise.allSettled([
+      fetchJSON('data/summary.json'),
+      fetchJSON('data/today.json'),
+      fetchJSON('data/live.json'),
+    ]);
+
+    const DS = summary.status === 'fulfilled' ? summary.value : [];
+    const plays = today.status === 'fulfilled' ? today.value : [];
+    const liveData = live.status === 'fulfilled' ? live.value : null;
+
+    if (plays.length === 0 && DS.length === 0) {
+      app.innerHTML = `<div class="error">
+        <h2 style="font:700 18px var(--M);color:var(--bl);margin-bottom:8px">PropEdge</h2>
+        <p>No data available yet.</p>
+        <p>Run the pre-game analysis to generate today's picks.</p>
+        <button onclick="location.reload()">Retry</button>
+      </div>`;
+      return;
+    }
+
+    // Render dashboard
+    renderDashboard(app, plays, DS, liveData);
+
+    // Auto-refresh live scores every 60 seconds
+    setInterval(async () => {
+      try {
+        const freshLive = await fetchJSON('data/live.json');
+        updateLiveScores(freshLive);
+      } catch(e) {}
+    }, 60000);
+
+  } catch (err) {
+    app.innerHTML = `<div class="error">
+      <p>Failed to load data: ${err.message}</p>
+      <button onclick="location.reload()">Retry</button>
+    </div>`;
+  }
+}
+
+function renderDashboard(app, plays, DS, liveData) {
+  plays.sort((a,b) => a.tier - b.tier || b.conf - a.conf);
+
+  const SN = DS.reduce((a,d) => ({
+    g:a.g+d.graded, w:a.w+d.wins, l:a.l+d.losses,
+    t1:a.t1+d.t1, t1w:a.t1w+d.t1w, t2:a.t2+d.t2, t2w:a.t2w+d.t2w, p:a.p+d.plays
+  }), {g:0,w:0,l:0,t1:0,t1w:0,t2:0,t2w:0,p:0});
+
+  const shr = SN.g ? Math.round(SN.w/SN.g*1000)/10 : 0;
+  const graded = plays.filter(p => p.result === 'WIN' || p.result === 'LOSS');
+  const isPreGame = graded.length === 0;
+  const t1 = plays.filter(p => p.tier === 1);
+  const t2 = plays.filter(p => p.tier === 2);
+  const games = [...new Set(plays.map(p => p.match))];
+  const todayDate = plays.length > 0 ? plays[0].date : new Date().toISOString().split('T')[0];
+
+  let h = `
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px">
+    <div>
+      <div style="font:800 22px/1.1 var(--M);letter-spacing:-.5px;background:linear-gradient(135deg,var(--bl),var(--vi));-webkit-background-clip:text;-webkit-text-fill-color:transparent">PropEdge</div>
+      <div style="color:var(--tx2);font:400 11px var(--S);margin-top:3px">${todayDate} · ${games.length} games · ${plays.length} props${isPreGame ? ' · PRE-GAME' : ''}</div>
+    </div>
+    <div style="width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(56,189,248,.15),rgba(167,139,250,.15));border:1px solid rgba(56,189,248,.2);font:800 14px var(--M);color:var(--bl)">PE</div>
+  </div>`;
+
+  // Live scores banner
+  if (liveData && liveData.gamesLive > 0) {
+    h += `<div id="live-banner" style="background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.2);border-radius:10px;padding:10px;margin-bottom:12px">
+      <div style="font:700 10px var(--M);color:var(--rd);margin-bottom:6px">🔴 LIVE — ${liveData.gamesLive} game${liveData.gamesLive>1?'s':''} in progress</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px" id="live-games">
+        ${liveData.games.filter(g => g.gameStatus === 2).map(g => `
+          <div style="font:600 11px var(--M);color:var(--tx)">${g.away} ${g.awayScore} @ ${g.home} ${g.homeScore} <span style="color:var(--tx3);font-weight:400">${g.status}</span></div>
+        `).join('')}
+      </div>
+    </div>`;
+  }
+
+  // Season stats bar
+  h += `<div style="display:flex;gap:8px;margin-bottom:12px;padding:8px;background:var(--bg1);border-radius:10px;font:500 10px var(--M);color:var(--tx3);justify-content:space-around">
+    <span>Season: <span style="color:var(--tx)">${SN.w}W/${SN.l}L</span></span>
+    <span>HR: <span style="color:${shr>=55?'var(--gr)':'var(--rd)'}">${shr}%</span></span>
+    <span>T1: <span style="color:var(--gr)">${SN.t1?Math.round(SN.t1w/SN.t1*1000)/10:0}%</span></span>
+    <span>T2: <span style="color:var(--bl)">${SN.t2?Math.round(SN.t2w/SN.t2*1000)/10:0}%</span></span>
+  </div>`;
+
+  // Today's stats
+  if (isPreGame) {
+    h += `<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px">
+      ${[[plays.length,'Props','var(--tx)'],[games.length,'Games','var(--tx)'],[t1.length,'Tier 1','var(--gr)'],[t2.length,'Tier 2','var(--yl)']].map(([v,l,c]) => `
+        <div style="background:var(--bg1);border-radius:10px;padding:10px 4px;text-align:center"><div style="font:700 17px var(--M);color:${c}">${v}</div><div style="font:500 7px var(--M);color:var(--tx3);text-transform:uppercase;letter-spacing:.8px;margin-top:2px">${l}</div></div>
+      `).join('')}
+    </div>`;
+  }
+
+  // Cards
+  h += `<div style="font:400 9px var(--S);color:var(--tx3);margin-bottom:8px;display:flex;gap:10px">
+    <span>● <span style="color:var(--gr)">Over</span></span>
+    <span>● <span style="color:var(--rd)">Under</span></span>
+    <span style="margin-left:auto">Tap to expand</span>
+  </div>`;
+
+  plays.forEach(p => { h += renderCard(p); });
+
+  h += `<div style="margin-top:18px;background:var(--bg1);border-radius:10px;padding:14px;font:400 10px var(--S);color:var(--tx3);line-height:1.6">
+    <strong style="color:var(--tx2)">Model:</strong> 10-signal engine · Tier 1 ≥ 62% (2u) · Tier 2 ≥ 55% (1u) · Decimal odds · Auto-refreshes live scores every 60s
+  </div>`;
+
+  app.innerHTML = h;
+}
+
+function renderCard(p) {
+  const ov = p.dir === 'OVER';
+  const bdr = ov ? 'var(--gr)' : p.dir === 'UNDER' ? 'var(--rd)' : 'var(--tx3)';
+  const bg = p.result === 'WIN' ? 'rgba(6,78,59,.2)' : p.result === 'LOSS' ? 'rgba(69,10,10,.2)' : 'rgba(12,18,32,.7)';
+  const dBg = ov ? 'var(--grA)' : p.dir === 'UNDER' ? 'var(--rdA)' : 'rgba(148,163,184,.12)';
+  const dC = ov ? 'var(--gr)' : p.dir === 'UNDER' ? 'var(--rd)' : 'var(--tx2)';
+  const tBg = p.tier===1?'var(--grA)':p.tier===2?'var(--ylA)':'rgba(148,163,184,.06)';
+  const tC = p.tier===1?'var(--gr)':p.tier===2?'var(--yl)':'var(--tx3)';
+  const flagC = p.flags>=8?'var(--gr)':p.flags>=6?'var(--yl)':'var(--rd)';
+  const cfc = c => c>=.62?'var(--gr)':c>=.55?'var(--yl)':'var(--tx3)';
+  const clr = (v,r) => v==null?'var(--tx)':v>r?'var(--gr)':v<r?'var(--rd)':'var(--tx)';
+  const k = p.player + '_' + p.line;
+
+  let h = `<div class="pe-card" data-key="${k}" onclick="toggleCard('${k.replace(/'/g,"\\'")}')" style="border-radius:12px;padding:11px 13px;margin-bottom:7px;cursor:pointer;border-left:3px solid ${bdr};background:${bg};transition:all .2s">`;
+
+  // Top row
+  h += `<div style="display:flex;justify-content:space-between;align-items:flex-start"><div style="flex:1">
+    <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap">
+      <span style="font:700 9px var(--M);padding:1px 7px;border-radius:8px;background:${dBg};color:${dC}">${p.dir==='NO PLAY'?p.rawDir:p.dir}</span>
+      <span style="font-weight:600;font-size:13px">${p.player}</span>
+      <span style="font:700 8px var(--M);padding:2px 5px;border-radius:4px;background:${tBg};color:${tC}">T${p.tier}</span>
+      <span style="font:700 9px var(--M);padding:2px 6px;border-radius:4px;background:rgba(56,189,248,.08);color:${flagC}">${p.flagsStr||''}</span>
+    </div>
+    <div style="font-size:9px;color:var(--tx2);margin-top:2px">${p.match} · ${p.gameTime||''} · ${p.position||''} · ${Math.round(p.conf*100)}%</div>
+  </div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">`;
+
+  if(p.result==='WIN') h+=`<span style="font:800 10px var(--M);padding:2px 8px;border-radius:5px;background:var(--grA);color:var(--gr)">WIN</span>`;
+  else if(p.result==='LOSS') h+=`<span style="font:800 10px var(--M);padding:2px 8px;border-radius:5px;background:var(--rdA);color:var(--rd)">LOSS</span>`;
+  else h+=`<span style="font:600 10px var(--M);color:var(--tx3)">${p.units}u</span>`;
+
+  if(p.edge!=null){const ec=p.edge>0?'var(--gr)':p.edge<-3?'var(--rd)':'var(--tx3)';h+=`<span style="font:600 9px var(--M);color:${ec}">Edge: ${p.edge>0?'+':''}${p.edge}%</span>`;}
+
+  h+=`</div></div>`;
+
+  // Key stats
+  const odds = p.dir==='OVER'?p.overOdds:p.underOdds;
+  h += `<div style="display:flex;align-items:center;gap:10px;margin-top:8px">
+    ${[['Line',p.line,'var(--tx)'],['L30',p.l30,clr(p.l30,p.line)],['HR%',p.hr30+'%',p.hr30>=55?'var(--gr)':p.hr30<=40?'var(--rd)':'var(--tx)'],['Odds',odds||'-','var(--tx)']].map(([k,v,c])=>`<div style="text-align:center"><div style="font:500 7px var(--M);color:var(--tx3);text-transform:uppercase;letter-spacing:.5px">${k}</div><div style="font:700 ${k==='Odds'?'12':'15'}px var(--M);color:${c};margin-top:1px">${v||'-'}</div></div>`).join('')}
+  </div>`;
+
+  // Conf bar
+  const cf = Math.max(0,Math.min(100,((p.conf-.45)/.4)*100));
+  h += `<div style="display:flex;align-items:center;gap:6px;margin-top:6px">
+    <span style="font:500 7px var(--M);color:var(--tx3);text-transform:uppercase;letter-spacing:.5px">Conf</span>
+    <div style="flex:1;height:4px;background:var(--bg2);border-radius:2px;overflow:hidden"><div style="width:${cf}%;height:100%;background:${cfc(p.conf)};border-radius:2px"></div></div>
+    <span style="font:700 10px var(--M);color:${cfc(p.conf)};min-width:30px;text-align:right">${Math.round(p.conf*100)}%</span>
+  </div>`;
+
+  // Recent
+  if(p.recent&&p.recent.length) h+=`<div style="display:flex;gap:5px;margin-top:5px">${p.recent.map(v=>`<span style="font:600 9px var(--M);color:${v>p.line?'var(--gr)':'var(--rd)'}">${v}</span>`).join('')}<span style="font:400 8px var(--M);color:var(--tx3);margin-left:4px">(${p.recentOver||0}/${p.recent.length} over)</span></div>`;
+
+  // Expandable (hidden by default)
+  h += `<div class="pe-expand" style="display:none;margin-top:10px;padding-top:10px;border-top:1px solid var(--bg2)">`;
+
+  // Pre-match reason
+  if(p.preMatchReason) h+=`<div style="background:var(--bg1);border-radius:8px;padding:10px 12px;font:400 11px var(--S);color:var(--tx2);line-height:1.65;border-left:2px solid var(--bl);margin-bottom:8px"><strong style="color:var(--bl);font-size:10px">📊 MODEL ANALYSIS</strong><br>${p.preMatchReason}</div>`;
+
+  // Flags
+  if(p.flagDetails){h+=`<div style="font:600 8px var(--M);color:var(--tx3);letter-spacing:1.2px;margin-bottom:5px">SIGNAL FLAGS (${p.flagsStr})</div><div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px">`;
+  p.flagDetails.forEach(f=>{if(f.agrees===null)return;h+=`<div style="font:500 9px var(--M);padding:3px 8px;border-radius:6px;border:1px solid ${f.agrees?'rgba(52,211,153,.3)':'rgba(248,113,113,.2)'};background:${f.agrees?'rgba(52,211,153,.08)':'rgba(248,113,113,.06)'};color:${f.agrees?'var(--gr)':'var(--rd)'}">${f.agrees?'✓':'✗'} ${f.name}</div>`;});
+  h+=`</div>`;}
+
+  // Averages grid
+  h += `<div style="font:600 8px var(--M);color:var(--tx3);letter-spacing:1.2px;margin-bottom:5px">SCORING</div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-bottom:8px">${[['L30',p.l30],['L10',p.l10],['L5',p.l5],['L3',p.l3]].map(([k,v])=>`<div style="text-align:center"><div style="font:500 7px var(--M);color:var(--tx3)">${k}</div><div style="font:700 13px var(--M);color:${clr(v,p.line)}">${v||'-'}</div></div>`).join('')}</div>`;
+
+  // Context
+  h += `<div style="background:var(--bg);border-radius:8px;padding:9px;margin-bottom:6px;display:flex;gap:10px;flex-wrap:wrap;font:400 11px var(--S);color:var(--tx2);border:1px solid rgba(56,189,248,.04)">`;
+  if(p.overOdds) h+=`<span>Over: ${p.overOdds}</span>`;
+  if(p.underOdds) h+=`<span>Under: ${p.underOdds}</span>`;
+  if(p.spread!=null) h+=`<span>Spread: ${p.spread>0?'+':''}${p.spread}</span>`;
+  if(p.total!=null) h+=`<span>Total: ${p.total}</span>`;
+  if(p.blowout) h+=`<span style="color:var(--yl)">⚠ Blowout</span>`;
+  if(p.h2hG>0) h+=`<span style="color:var(--vi)">H2H: ${p.h2h}</span>`;
+  h += `</div>`;
+
+  // Post-match reason
+  if(p.reason&&p.result) h+=`<div style="background:var(--bg1);border-radius:8px;padding:10px 12px;font:400 11px var(--S);color:var(--tx2);line-height:1.65;border-left:2px solid ${p.result==='WIN'?'var(--gr)':'var(--rd)'}"><strong style="color:${p.result==='WIN'?'var(--gr)':'var(--rd)'};font-size:10px">🎯 RESULT</strong><br>${p.reason}</div>`;
+
+  h += `</div>`;
+  h += `<div style="text-align:center;font:400 8px var(--S);color:var(--tx3);margin-top:4px;letter-spacing:1px">▼</div></div>`;
+  return h;
+}
+
+function toggleCard(key) {
+  const cards = document.querySelectorAll('.pe-card');
+  cards.forEach(card => {
+    if (card.dataset.key === key) {
+      const expand = card.querySelector('.pe-expand');
+      const arrow = card.querySelector('div:last-child');
+      if (expand.style.display === 'none') {
+        expand.style.display = 'block';
+        arrow.textContent = '▲';
+      } else {
+        expand.style.display = 'none';
+        arrow.textContent = '▼';
+      }
+    }
+  });
+}
+
+function updateLiveScores(liveData) {
+  const banner = document.getElementById('live-banner');
+  if (!banner || !liveData) return;
+  const liveGames = liveData.games.filter(g => g.gameStatus === 2);
+  if (liveGames.length === 0) {
+    banner.style.display = 'none';
+    return;
+  }
+  const gamesDiv = document.getElementById('live-games');
+  if (gamesDiv) {
+    gamesDiv.innerHTML = liveGames.map(g => `
+      <div style="font:600 11px var(--M);color:var(--tx)">${g.away} ${g.awayScore} @ ${g.home} ${g.homeScore} <span style="color:var(--tx3);font-weight:400">${g.status}</span></div>
+    `).join('');
+  }
+}
+
+// Start
+init();
+</script>
+</body>
+</html>
