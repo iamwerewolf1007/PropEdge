@@ -1,0 +1,40 @@
+name: Morning Grading
+
+on:
+  schedule:
+    - cron: '0 11 * * *'  # 6 AM ET (UTC-5) / 7 AM ET (UTC-4 DST)
+  workflow_dispatch:        # manual trigger button
+
+permissions:
+  contents: write
+
+jobs:
+  grade:
+    runs-on: ubuntu-latest
+    env:
+      PROPEDGE_DIR: ${{ github.workspace }}
+      TZ: America/New_York
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install pandas numpy requests nba_api
+
+      - name: Run morning grading
+        run: python scripts/morning_grading.py
+
+      - name: Commit and push
+        run: |
+          git config user.name "PropEdge Bot"
+          git config user.email "propedge-bot@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet || git commit -m "🏀 Morning grading $(date +%Y-%m-%d)"
+          git push
