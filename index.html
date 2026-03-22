@@ -6,53 +6,272 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#060a13">
-<title>PropEdge</title>
+<title>PropEdge — Mar 21</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#060a13;--bg1:#0c1220;--bg2:#111a2e;--tx:#e2e8f0;--tx2:#94a3b8;--tx3:#64748b;--tx4:#475569;--gr:#34d399;--grA:rgba(52,211,153,.15);--rd:#f87171;--rdA:rgba(248,113,113,.15);--bl:#38bdf8;--blA:rgba(56,189,248,.13);--yl:#fbbf24;--ylA:rgba(251,191,36,.13);--vi:#a78bfa;--M:'JetBrains Mono',monospace;--S:'DM Sans',system-ui,sans-serif}
+:root{--bg:#060a13;--bg1:#0c1220;--bg2:#111a2e;--bg3:#182040;--tx:#e2e8f0;--tx2:#94a3b8;--tx3:#64748b;--tx4:#475569;--gr:#34d399;--grA:rgba(52,211,153,.15);--rd:#f87171;--rdA:rgba(248,113,113,.15);--bl:#38bdf8;--blA:rgba(56,189,248,.13);--yl:#fbbf24;--ylA:rgba(251,191,36,.13);--vi:#a78bfa;--viA:rgba(167,139,250,.13);--M:'JetBrains Mono',monospace;--S:'DM Sans',system-ui,sans-serif}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{background:var(--bg);color:var(--tx);font-family:var(--S);-webkit-font-smoothing:antialiased}
 ::-webkit-scrollbar{width:0;height:0}
-.app{max-width:520px;margin:0 auto;padding:12px 14px 80px}
-@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.app{max-width:520px;margin:0 auto;padding:max(env(safe-area-inset-top,12px),12px) 14px calc(env(safe-area-inset-bottom,0px)+80px)}
+.hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px}
+.hdr-t{font:800 22px/1.1 var(--M);letter-spacing:-.5px;background:linear-gradient(135deg,var(--bl),var(--vi));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hdr-s{font:400 11px/1.4 var(--S);color:var(--tx2);margin-top:3px}
+.logo{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(56,189,248,.15),rgba(167,139,250,.15));border:1px solid rgba(56,189,248,.2);font:800 14px var(--M);color:var(--bl)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px}
+.st{background:var(--bg1);border-radius:10px;padding:10px 4px;text-align:center;border:1px solid rgba(56,189,248,.03)}
+.st-v{font:700 17px var(--M)}
+.st-l{font:500 7px var(--M);color:var(--tx3);text-transform:uppercase;letter-spacing:.8px;margin-top:2px}
+.fl{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px}
+.pl{font:500 10px var(--M);padding:5px 11px;border-radius:8px;cursor:pointer;border:1px solid var(--bg2);background:var(--bg1);color:var(--tx3);transition:.15s;white-space:nowrap}
+.pl:active{transform:scale(.96)}
+.pl.bl{border-color:rgba(56,189,248,.3);background:var(--blA);color:var(--bl)}
+.pl.vi{border-color:rgba(167,139,250,.3);background:var(--viA);color:var(--vi)}
+.pl.yl{border-color:rgba(251,191,36,.3);background:var(--ylA);color:var(--yl)}
+.pl.gr{border-color:rgba(52,211,153,.3);background:var(--grA);color:var(--gr)}
+.cd{border-radius:12px;padding:11px 13px;margin-bottom:7px;cursor:pointer;border-left:3px solid var(--tx4);background:rgba(12,18,32,.7);transition:all .2s}
+.cd:active{transform:scale(.99)}
+.cd.og{border-color:var(--gr)}.cd.ug{border-color:var(--rd)}
+.kv{text-align:center}
+.kv-l{font:500 7px var(--M);color:var(--tx3);text-transform:uppercase;letter-spacing:.5px}
+.kv-v{font:700 14px var(--M);margin-top:1px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-bottom:8px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:8px}
+.sec{font:600 8px var(--M);color:var(--tx3);letter-spacing:1.2px;margin-bottom:5px;text-transform:uppercase}
+.ctx{background:var(--bg);border-radius:8px;padding:9px;margin-bottom:6px;display:flex;gap:10px;flex-wrap:wrap;font:400 11px var(--S);color:var(--tx2);border:1px solid rgba(56,189,248,.04)}
+.rsn{background:var(--bg1);border-radius:8px;padding:10px 12px;font:400 11px var(--S);color:var(--tx2);line-height:1.65;border:1px solid rgba(56,189,248,.04)}
+.flag-grid{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px}
+.flag{font:500 9px var(--M);padding:3px 8px;border-radius:6px;border:1px solid}
+.flag-y{border-color:rgba(52,211,153,.3);background:rgba(52,211,153,.08);color:var(--gr)}
+.flag-n{border-color:rgba(248,113,113,.2);background:rgba(248,113,113,.06);color:var(--rd)}
+.ft{margin-top:18px;background:var(--bg1);border-radius:10px;padding:14px;font:400 10px var(--S);color:var(--tx3);line-height:1.6}
+.ld{text-align:center;padding:30px;color:var(--tx3);font:400 13px var(--S)}
 @keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 </style>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
 </head>
 <body>
-<div class="app" id="app"><div style="text-align:center;padding:60px 20px"><div style="font:800 22px var(--M);background:linear-gradient(135deg,var(--bl),var(--vi));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:12px">PropEdge</div><div id="lm" style="font:400 12px var(--S);color:var(--tx3);margin-bottom:16px">Loading season data...</div><div style="height:3px;background:var(--bg2);border-radius:2px;max-width:200px;margin:0 auto;overflow:hidden"><div style="height:100%;width:30%;background:linear-gradient(90deg,var(--bl),var(--vi));border-radius:2px;animation:pulse 1.2s ease-in-out infinite"></div></div></div></div>
+<div class="app" id="app"></div>
 <script>
+// Season summary embedded (16 KB)
 const DS=[{"date": "2025-10-30", "plays": 16, "graded": 15, "wins": 10, "losses": 5, "hr": 66.7, "t1": 3, "t1w": 2, "t2": 3, "t2w": 3, "games": 3}, {"date": "2025-10-31", "plays": 44, "graded": 37, "wins": 25, "losses": 12, "hr": 67.6, "t1": 6, "t1w": 4, "t2": 15, "t2w": 11, "games": 6}, {"date": "2025-11-01", "plays": 61, "graded": 55, "wins": 29, "losses": 26, "hr": 52.7, "t1": 10, "t1w": 4, "t2": 24, "t2w": 12, "games": 6}, {"date": "2025-11-02", "plays": 96, "graded": 80, "wins": 48, "losses": 32, "hr": 60.0, "t1": 6, "t1w": 4, "t2": 34, "t2w": 23, "games": 8}, {"date": "2025-11-03", "plays": 112, "graded": 95, "wins": 49, "losses": 46, "hr": 51.6, "t1": 10, "t1w": 3, "t2": 34, "t2w": 22, "games": 9}, {"date": "2025-11-04", "plays": 72, "graded": 62, "wins": 32, "losses": 30, "hr": 51.6, "t1": 11, "t1w": 8, "t2": 29, "t2w": 14, "games": 6}, {"date": "2025-11-05", "plays": 129, "graded": 104, "wins": 57, "losses": 47, "hr": 54.8, "t1": 6, "t1w": 4, "t2": 39, "t2w": 23, "games": 11}, {"date": "2025-11-06", "plays": 12, "graded": 10, "wins": 6, "losses": 4, "hr": 60.0, "t1": 2, "t1w": 2, "t2": 5, "t2w": 3, "games": 1}, {"date": "2025-11-07", "plays": 148, "graded": 121, "wins": 68, "losses": 53, "hr": 56.2, "t1": 11, "t1w": 8, "t2": 53, "t2w": 32, "games": 11}, {"date": "2025-11-08", "plays": 102, "graded": 78, "wins": 45, "losses": 33, "hr": 57.7, "t1": 6, "t1w": 3, "t2": 34, "t2w": 20, "games": 8}, {"date": "2025-11-09", "plays": 94, "graded": 75, "wins": 46, "losses": 29, "hr": 61.3, "t1": 7, "t1w": 4, "t2": 28, "t2w": 22, "games": 7}, {"date": "2025-11-10", "plays": 112, "graded": 82, "wins": 58, "losses": 24, "hr": 70.7, "t1": 10, "t1w": 7, "t2": 41, "t2w": 30, "games": 9}, {"date": "2025-11-11", "plays": 78, "graded": 57, "wins": 36, "losses": 21, "hr": 63.2, "t1": 4, "t1w": 3, "t2": 23, "t2w": 12, "games": 6}, {"date": "2025-11-12", "plays": 157, "graded": 115, "wins": 74, "losses": 41, "hr": 64.3, "t1": 19, "t1w": 13, "t2": 42, "t2w": 29, "games": 12}, {"date": "2025-11-13", "plays": 38, "graded": 31, "wins": 19, "losses": 12, "hr": 61.3, "t1": 2, "t1w": 2, "t2": 12, "t2w": 8, "games": 3}, {"date": "2025-11-14", "plays": 122, "graded": 96, "wins": 52, "losses": 44, "hr": 54.2, "t1": 12, "t1w": 10, "t2": 35, "t2w": 17, "games": 9}, {"date": "2025-11-15", "plays": 67, "graded": 50, "wins": 28, "losses": 22, "hr": 56.0, "t1": 4, "t1w": 2, "t2": 23, "t2w": 15, "games": 5}, {"date": "2025-11-16", "plays": 102, "graded": 86, "wins": 48, "losses": 38, "hr": 55.8, "t1": 9, "t1w": 7, "t2": 39, "t2w": 23, "games": 8}, {"date": "2025-11-17", "plays": 106, "graded": 89, "wins": 47, "losses": 42, "hr": 52.8, "t1": 8, "t1w": 6, "t2": 36, "t2w": 22, "games": 8}, {"date": "2025-11-18", "plays": 76, "graded": 67, "wins": 41, "losses": 26, "hr": 61.2, "t1": 7, "t1w": 4, "t2": 26, "t2w": 17, "games": 6}, {"date": "2025-11-19", "plays": 105, "graded": 92, "wins": 52, "losses": 40, "hr": 56.5, "t1": 6, "t1w": 2, "t2": 44, "t2w": 28, "games": 9}, {"date": "2025-11-20", "plays": 47, "graded": 43, "wins": 21, "losses": 22, "hr": 48.8, "t1": 3, "t1w": 1, "t2": 18, "t2w": 10, "games": 4}, {"date": "2025-11-21", "plays": 121, "graded": 99, "wins": 60, "losses": 39, "hr": 60.6, "t1": 10, "t1w": 7, "t2": 42, "t2w": 30, "games": 9}, {"date": "2025-11-22", "plays": 86, "graded": 66, "wins": 36, "losses": 30, "hr": 54.5, "t1": 9, "t1w": 6, "t2": 35, "t2w": 18, "games": 7}, {"date": "2025-11-23", "plays": 102, "graded": 82, "wins": 44, "losses": 38, "hr": 53.7, "t1": 7, "t1w": 5, "t2": 31, "t2w": 15, "games": 8}, {"date": "2025-11-24", "plays": 121, "graded": 105, "wins": 69, "losses": 36, "hr": 65.7, "t1": 15, "t1w": 9, "t2": 44, "t2w": 30, "games": 10}, {"date": "2025-11-25", "plays": 36, "graded": 25, "wins": 17, "losses": 8, "hr": 68.0, "t1": 2, "t1w": 2, "t2": 14, "t2w": 10, "games": 3}, {"date": "2025-11-26", "plays": 122, "graded": 96, "wins": 51, "losses": 45, "hr": 53.1, "t1": 6, "t1w": 2, "t2": 43, "t2w": 23, "games": 9}, {"date": "2025-11-28", "plays": 140, "graded": 110, "wins": 53, "losses": 57, "hr": 48.2, "t1": 14, "t1w": 7, "t2": 42, "t2w": 27, "games": 11}, {"date": "2025-11-29", "plays": 89, "graded": 66, "wins": 45, "losses": 21, "hr": 68.2, "t1": 7, "t1w": 6, "t2": 22, "t2w": 13, "games": 8}, {"date": "2025-11-30", "plays": 84, "graded": 68, "wins": 35, "losses": 33, "hr": 51.5, "t1": 7, "t1w": 4, "t2": 30, "t2w": 16, "games": 7}, {"date": "2025-12-01", "plays": 116, "graded": 93, "wins": 54, "losses": 39, "hr": 58.1, "t1": 7, "t1w": 3, "t2": 40, "t2w": 24, "games": 9}, {"date": "2025-12-02", "plays": 74, "graded": 60, "wins": 34, "losses": 26, "hr": 56.7, "t1": 2, "t1w": 1, "t2": 25, "t2w": 14, "games": 6}, {"date": "2025-12-03", "plays": 111, "graded": 89, "wins": 52, "losses": 37, "hr": 58.4, "t1": 8, "t1w": 5, "t2": 36, "t2w": 19, "games": 9}, {"date": "2025-12-04", "plays": 67, "graded": 56, "wins": 25, "losses": 31, "hr": 44.6, "t1": 6, "t1w": 2, "t2": 28, "t2w": 14, "games": 5}, {"date": "2025-12-05", "plays": 149, "graded": 126, "wins": 69, "losses": 57, "hr": 54.8, "t1": 11, "t1w": 7, "t2": 55, "t2w": 32, "games": 12}, {"date": "2025-12-06", "plays": 90, "graded": 70, "wins": 34, "losses": 36, "hr": 48.6, "t1": 1, "t1w": 0, "t2": 33, "t2w": 21, "games": 7}, {"date": "2025-12-07", "plays": 94, "graded": 70, "wins": 39, "losses": 31, "hr": 55.7, "t1": 9, "t1w": 6, "t2": 30, "t2w": 18, "games": 7}, {"date": "2025-12-08", "plays": 41, "graded": 36, "wins": 28, "losses": 8, "hr": 77.8, "t1": 7, "t1w": 6, "t2": 9, "t2w": 9, "games": 3}, {"date": "2025-12-09", "plays": 32, "graded": 25, "wins": 13, "losses": 12, "hr": 52.0, "t1": 2, "t1w": 1, "t2": 9, "t2w": 3, "games": 2}, {"date": "2025-12-10", "plays": 35, "graded": 29, "wins": 15, "losses": 14, "hr": 51.7, "t1": 2, "t1w": 2, "t2": 10, "t2w": 5, "games": 2}, {"date": "2025-12-11", "plays": 55, "graded": 41, "wins": 23, "losses": 18, "hr": 56.1, "t1": 1, "t1w": 0, "t2": 20, "t2w": 13, "games": 4}, {"date": "2025-12-12", "plays": 91, "graded": 74, "wins": 40, "losses": 34, "hr": 54.1, "t1": 5, "t1w": 4, "t2": 30, "t2w": 14, "games": 7}, {"date": "2025-12-13", "plays": 31, "graded": 22, "wins": 14, "losses": 8, "hr": 63.6, "t1": 6, "t1w": 5, "t2": 6, "t2w": 2, "games": 2}, {"date": "2025-12-14", "plays": 77, "graded": 66, "wins": 38, "losses": 28, "hr": 57.6, "t1": 8, "t1w": 4, "t2": 25, "t2w": 16, "games": 8}, {"date": "2025-12-15", "plays": 69, "graded": 52, "wins": 27, "losses": 25, "hr": 51.9, "t1": 5, "t1w": 2, "t2": 19, "t2w": 13, "games": 5}, {"date": "2025-12-16", "plays": 17, "graded": 0, "wins": 0, "losses": 0, "hr": 0, "t1": 0, "t1w": 0, "t2": 0, "t2w": 0, "games": 1}, {"date": "2025-12-17", "plays": 20, "graded": 16, "wins": 9, "losses": 7, "hr": 56.2, "t1": 2, "t1w": 1, "t2": 8, "t2w": 5, "games": 2}, {"date": "2025-12-18", "plays": 160, "graded": 131, "wins": 66, "losses": 65, "hr": 50.4, "t1": 10, "t1w": 7, "t2": 44, "t2w": 20, "games": 12}, {"date": "2025-12-19", "plays": 64, "graded": 50, "wins": 31, "losses": 19, "hr": 62.0, "t1": 8, "t1w": 7, "t2": 12, "t2w": 8, "games": 5}, {"date": "2025-12-20", "plays": 125, "graded": 95, "wins": 60, "losses": 35, "hr": 63.2, "t1": 9, "t1w": 4, "t2": 45, "t2w": 33, "games": 10}, {"date": "2025-12-21", "plays": 90, "graded": 71, "wins": 40, "losses": 31, "hr": 56.3, "t1": 10, "t1w": 6, "t2": 20, "t2w": 11, "games": 6}, {"date": "2025-12-22", "plays": 85, "graded": 69, "wins": 41, "losses": 28, "hr": 59.4, "t1": 8, "t1w": 7, "t2": 25, "t2w": 14, "games": 7}, {"date": "2025-12-23", "plays": 183, "graded": 146, "wins": 84, "losses": 62, "hr": 57.5, "t1": 19, "t1w": 11, "t2": 51, "t2w": 31, "games": 14}, {"date": "2025-12-25", "plays": 73, "graded": 56, "wins": 37, "losses": 19, "hr": 66.1, "t1": 5, "t1w": 5, "t2": 24, "t2w": 17, "games": 5}, {"date": "2025-12-26", "plays": 118, "graded": 95, "wins": 57, "losses": 38, "hr": 60.0, "t1": 10, "t1w": 6, "t2": 41, "t2w": 26, "games": 9}, {"date": "2025-12-27", "plays": 127, "graded": 98, "wins": 49, "losses": 49, "hr": 50.0, "t1": 7, "t1w": 3, "t2": 47, "t2w": 23, "games": 9}, {"date": "2025-12-28", "plays": 78, "graded": 66, "wins": 39, "losses": 27, "hr": 59.1, "t1": 6, "t1w": 3, "t2": 21, "t2w": 10, "games": 6}, {"date": "2025-12-29", "plays": 141, "graded": 116, "wins": 64, "losses": 52, "hr": 55.2, "t1": 9, "t1w": 8, "t2": 50, "t2w": 24, "games": 11}, {"date": "2025-12-30", "plays": 52, "graded": 38, "wins": 23, "losses": 15, "hr": 60.5, "t1": 2, "t1w": 1, "t2": 13, "t2w": 9, "games": 4}, {"date": "2025-12-31", "plays": 106, "graded": 84, "wins": 46, "losses": 38, "hr": 54.8, "t1": 9, "t1w": 6, "t2": 30, "t2w": 19, "games": 8}, {"date": "2026-01-01", "plays": 62, "graded": 52, "wins": 28, "losses": 24, "hr": 53.8, "t1": 9, "t1w": 5, "t2": 16, "t2w": 8, "games": 5}, {"date": "2026-01-02", "plays": 122, "graded": 92, "wins": 44, "losses": 48, "hr": 47.8, "t1": 8, "t1w": 6, "t2": 44, "t2w": 19, "games": 10}, {"date": "2026-01-03", "plays": 108, "graded": 87, "wins": 48, "losses": 39, "hr": 55.2, "t1": 11, "t1w": 5, "t2": 30, "t2w": 20, "games": 8}, {"date": "2026-01-04", "plays": 63, "graded": 48, "wins": 24, "losses": 24, "hr": 50.0, "t1": 3, "t1w": 1, "t2": 24, "t2w": 12, "games": 5}, {"date": "2026-01-05", "plays": 106, "graded": 81, "wins": 40, "losses": 41, "hr": 49.4, "t1": 9, "t1w": 5, "t2": 28, "t2w": 13, "games": 8}, {"date": "2026-01-06", "plays": 82, "graded": 64, "wins": 42, "losses": 22, "hr": 65.6, "t1": 7, "t1w": 6, "t2": 25, "t2w": 15, "games": 6}, {"date": "2026-01-07", "plays": 164, "graded": 121, "wins": 75, "losses": 46, "hr": 62.0, "t1": 12, "t1w": 4, "t2": 41, "t2w": 29, "games": 12}, {"date": "2026-01-08", "plays": 52, "graded": 30, "wins": 15, "losses": 15, "hr": 50.0, "t1": 3, "t1w": 3, "t2": 17, "t2w": 7, "games": 4}, {"date": "2026-01-09", "plays": 133, "graded": 98, "wins": 48, "losses": 50, "hr": 49.0, "t1": 14, "t1w": 8, "t2": 39, "t2w": 20, "games": 10}, {"date": "2026-01-10", "plays": 77, "graded": 65, "wins": 38, "losses": 27, "hr": 58.5, "t1": 4, "t1w": 4, "t2": 25, "t2w": 17, "games": 6}, {"date": "2026-01-11", "plays": 133, "graded": 102, "wins": 56, "losses": 46, "hr": 54.9, "t1": 15, "t1w": 9, "t2": 44, "t2w": 25, "games": 10}, {"date": "2026-01-12", "plays": 74, "graded": 57, "wins": 36, "losses": 21, "hr": 63.2, "t1": 9, "t1w": 5, "t2": 26, "t2w": 18, "games": 6}, {"date": "2026-01-13", "plays": 93, "graded": 77, "wins": 44, "losses": 33, "hr": 57.1, "t1": 13, "t1w": 9, "t2": 32, "t2w": 20, "games": 7}, {"date": "2026-01-14", "plays": 85, "graded": 68, "wins": 33, "losses": 35, "hr": 48.5, "t1": 8, "t1w": 3, "t2": 30, "t2w": 16, "games": 7}, {"date": "2026-01-15", "plays": 124, "graded": 97, "wins": 52, "losses": 45, "hr": 53.6, "t1": 6, "t1w": 3, "t2": 45, "t2w": 26, "games": 9}, {"date": "2026-01-16", "plays": 78, "graded": 67, "wins": 30, "losses": 37, "hr": 44.8, "t1": 11, "t1w": 7, "t2": 27, "t2w": 13, "games": 6}, {"date": "2026-01-17", "plays": 122, "graded": 94, "wins": 53, "losses": 41, "hr": 56.4, "t1": 13, "t1w": 11, "t2": 31, "t2w": 21, "games": 9}, {"date": "2026-01-18", "plays": 73, "graded": 57, "wins": 30, "losses": 27, "hr": 52.6, "t1": 8, "t1w": 3, "t2": 25, "t2w": 11, "games": 6}, {"date": "2026-01-19", "plays": 119, "graded": 98, "wins": 56, "losses": 42, "hr": 57.1, "t1": 8, "t1w": 4, "t2": 37, "t2w": 20, "games": 9}, {"date": "2026-01-20", "plays": 91, "graded": 72, "wins": 41, "losses": 31, "hr": 56.9, "t1": 6, "t1w": 2, "t2": 33, "t2w": 21, "games": 7}, {"date": "2026-01-21", "plays": 92, "graded": 72, "wins": 41, "losses": 31, "hr": 56.9, "t1": 2, "t1w": 1, "t2": 31, "t2w": 18, "games": 7}, {"date": "2026-01-22", "plays": 107, "graded": 80, "wins": 47, "losses": 33, "hr": 58.8, "t1": 8, "t1w": 4, "t2": 27, "t2w": 17, "games": 8}, {"date": "2026-01-23", "plays": 105, "graded": 80, "wins": 43, "losses": 37, "hr": 53.8, "t1": 10, "t1w": 4, "t2": 33, "t2w": 19, "games": 8}, {"date": "2026-01-24", "plays": 80, "graded": 69, "wins": 26, "losses": 43, "hr": 37.7, "t1": 6, "t1w": 1, "t2": 32, "t2w": 12, "games": 6}, {"date": "2026-01-25", "plays": 77, "graded": 67, "wins": 42, "losses": 25, "hr": 62.7, "t1": 9, "t1w": 8, "t2": 23, "t2w": 12, "games": 6}, {"date": "2026-01-26", "plays": 90, "graded": 66, "wins": 37, "losses": 29, "hr": 56.1, "t1": 6, "t1w": 4, "t2": 24, "t2w": 14, "games": 7}, {"date": "2026-01-27", "plays": 95, "graded": 71, "wins": 29, "losses": 42, "hr": 40.8, "t1": 8, "t1w": 3, "t2": 29, "t2w": 9, "games": 7}, {"date": "2026-01-28", "plays": 125, "graded": 94, "wins": 54, "losses": 40, "hr": 57.4, "t1": 4, "t1w": 1, "t2": 35, "t2w": 18, "games": 9}, {"date": "2026-01-29", "plays": 101, "graded": 83, "wins": 53, "losses": 30, "hr": 63.9, "t1": 10, "t1w": 7, "t2": 36, "t2w": 24, "games": 8}, {"date": "2026-01-30", "plays": 109, "graded": 90, "wins": 52, "losses": 38, "hr": 57.8, "t1": 5, "t1w": 4, "t2": 37, "t2w": 21, "games": 9}, {"date": "2026-01-31", "plays": 75, "graded": 58, "wins": 37, "losses": 21, "hr": 63.8, "t1": 5, "t1w": 3, "t2": 21, "t2w": 13, "games": 6}, {"date": "2026-02-01", "plays": 131, "graded": 100, "wins": 66, "losses": 34, "hr": 66.0, "t1": 3, "t1w": 2, "t2": 44, "t2w": 32, "games": 10}, {"date": "2026-02-02", "plays": 35, "graded": 30, "wins": 21, "losses": 9, "hr": 70.0, "t1": 2, "t1w": 2, "t2": 13, "t2w": 10, "games": 3}, {"date": "2026-02-03", "plays": 121, "graded": 98, "wins": 54, "losses": 44, "hr": 55.1, "t1": 4, "t1w": 2, "t2": 40, "t2w": 21, "games": 10}, {"date": "2026-02-04", "plays": 91, "graded": 69, "wins": 37, "losses": 32, "hr": 53.6, "t1": 12, "t1w": 7, "t2": 24, "t2w": 13, "games": 7}, {"date": "2026-02-05", "plays": 107, "graded": 87, "wins": 46, "losses": 41, "hr": 52.9, "t1": 3, "t1w": 3, "t2": 36, "t2w": 19, "games": 8}, {"date": "2026-02-06", "plays": 75, "graded": 60, "wins": 33, "losses": 27, "hr": 55.0, "t1": 2, "t1w": 1, "t2": 22, "t2w": 13, "games": 6}, {"date": "2026-02-07", "plays": 126, "graded": 98, "wins": 54, "losses": 44, "hr": 55.1, "t1": 4, "t1w": 1, "t2": 52, "t2w": 29, "games": 10}, {"date": "2026-02-08", "plays": 54, "graded": 45, "wins": 26, "losses": 19, "hr": 57.8, "t1": 1, "t1w": 1, "t2": 17, "t2w": 11, "games": 4}, {"date": "2026-02-09", "plays": 130, "graded": 93, "wins": 45, "losses": 48, "hr": 48.4, "t1": 7, "t1w": 4, "t2": 31, "t2w": 12, "games": 10}, {"date": "2026-02-10", "plays": 60, "graded": 46, "wins": 31, "losses": 15, "hr": 67.4, "t1": 5, "t1w": 5, "t2": 17, "t2w": 10, "games": 4}, {"date": "2026-02-11", "plays": 187, "graded": 140, "wins": 73, "losses": 67, "hr": 52.1, "t1": 12, "t1w": 6, "t2": 63, "t2w": 36, "games": 14}, {"date": "2026-02-12", "plays": 39, "graded": 30, "wins": 16, "losses": 14, "hr": 53.3, "t1": 4, "t1w": 4, "t2": 11, "t2w": 4, "games": 3}, {"date": "2026-02-19", "plays": 156, "graded": 122, "wins": 68, "losses": 54, "hr": 55.7, "t1": 10, "t1w": 3, "t2": 58, "t2w": 32, "games": 10}, {"date": "2026-02-20", "plays": 114, "graded": 93, "wins": 45, "losses": 48, "hr": 48.4, "t1": 4, "t1w": 3, "t2": 43, "t2w": 22, "games": 9}, {"date": "2026-02-21", "plays": 87, "graded": 76, "wins": 50, "losses": 26, "hr": 65.8, "t1": 5, "t1w": 2, "t2": 36, "t2w": 24, "games": 6}, {"date": "2026-02-22", "plays": 130, "graded": 107, "wins": 54, "losses": 53, "hr": 50.5, "t1": 6, "t1w": 5, "t2": 40, "t2w": 21, "games": 11}, {"date": "2026-02-23", "plays": 45, "graded": 41, "wins": 27, "losses": 14, "hr": 65.9, "t1": 6, "t1w": 6, "t2": 18, "t2w": 11, "games": 3}, {"date": "2026-02-24", "plays": 161, "graded": 138, "wins": 75, "losses": 63, "hr": 54.3, "t1": 12, "t1w": 5, "t2": 56, "t2w": 32, "games": 11}, {"date": "2026-02-25", "plays": 83, "graded": 64, "wins": 36, "losses": 28, "hr": 56.2, "t1": 5, "t1w": 3, "t2": 30, "t2w": 16, "games": 6}, {"date": "2026-02-26", "plays": 137, "graded": 114, "wins": 69, "losses": 45, "hr": 60.5, "t1": 7, "t1w": 5, "t2": 57, "t2w": 33, "games": 10}, {"date": "2026-02-27", "plays": 73, "graded": 62, "wins": 41, "losses": 21, "hr": 66.1, "t1": 3, "t1w": 3, "t2": 24, "t2w": 20, "games": 5}, {"date": "2026-02-28", "plays": 79, "graded": 65, "wins": 39, "losses": 26, "hr": 60.0, "t1": 5, "t1w": 5, "t2": 25, "t2w": 14, "games": 5}, {"date": "2026-03-01", "plays": 159, "graded": 124, "wins": 67, "losses": 57, "hr": 54.0, "t1": 7, "t1w": 6, "t2": 52, "t2w": 33, "games": 11}, {"date": "2026-03-02", "plays": 50, "graded": 36, "wins": 22, "losses": 14, "hr": 61.1, "t1": 3, "t1w": 1, "t2": 15, "t2w": 8, "games": 4}, {"date": "2026-03-03", "plays": 147, "graded": 115, "wins": 65, "losses": 50, "hr": 56.5, "t1": 10, "t1w": 6, "t2": 43, "t2w": 26, "games": 10}, {"date": "2026-03-04", "plays": 78, "graded": 61, "wins": 38, "losses": 23, "hr": 62.3, "t1": 7, "t1w": 5, "t2": 17, "t2w": 10, "games": 6}, {"date": "2026-03-05", "plays": 116, "graded": 86, "wins": 50, "losses": 36, "hr": 58.1, "t1": 5, "t1w": 2, "t2": 32, "t2w": 20, "games": 9}, {"date": "2026-03-06", "plays": 109, "graded": 87, "wins": 47, "losses": 40, "hr": 54.0, "t1": 3, "t1w": 1, "t2": 33, "t2w": 16, "games": 7}, {"date": "2026-03-07", "plays": 87, "graded": 70, "wins": 44, "losses": 26, "hr": 62.9, "t1": 7, "t1w": 5, "t2": 19, "t2w": 15, "games": 6}, {"date": "2026-03-08", "plays": 135, "graded": 92, "wins": 52, "losses": 40, "hr": 56.5, "t1": 6, "t1w": 3, "t2": 32, "t2w": 20, "games": 10}, {"date": "2026-03-09", "plays": 67, "graded": 57, "wins": 34, "losses": 23, "hr": 59.6, "t1": 4, "t1w": 2, "t2": 28, "t2w": 18, "games": 5}, {"date": "2026-03-10", "plays": 160, "graded": 115, "wins": 71, "losses": 44, "hr": 61.7, "t1": 5, "t1w": 3, "t2": 45, "t2w": 28, "games": 11}, {"date": "2026-03-11", "plays": 80, "graded": 65, "wins": 43, "losses": 22, "hr": 66.2, "t1": 3, "t1w": 1, "t2": 18, "t2w": 13, "games": 6}, {"date": "2026-03-12", "plays": 126, "graded": 88, "wins": 49, "losses": 39, "hr": 55.7, "t1": 9, "t1w": 5, "t2": 43, "t2w": 27, "games": 9}, {"date": "2026-03-13", "plays": 103, "graded": 73, "wins": 43, "losses": 30, "hr": 58.9, "t1": 4, "t1w": 2, "t2": 24, "t2w": 15, "games": 8}, {"date": "2026-03-14", "plays": 83, "graded": 57, "wins": 34, "losses": 23, "hr": 59.6, "t1": 4, "t1w": 3, "t2": 23, "t2w": 14, "games": 6}, {"date": "2026-03-15", "plays": 82, "graded": 60, "wins": 32, "losses": 28, "hr": 53.3, "t1": 4, "t1w": 3, "t2": 27, "t2w": 14, "games": 6}, {"date": "2026-03-16", "plays": 111, "graded": 78, "wins": 47, "losses": 31, "hr": 60.3, "t1": 0, "t1w": 0, "t2": 27, "t2w": 21, "games": 8}, {"date": "2026-03-17", "plays": 108, "graded": 86, "wins": 58, "losses": 28, "hr": 67.4, "t1": 6, "t1w": 4, "t2": 29, "t2w": 18, "games": 8}, {"date": "2026-03-18", "plays": 110, "graded": 95, "wins": 61, "losses": 34, "hr": 64.2, "t1": 1, "t1w": 0, "t2": 46, "t2w": 36, "games": 9}, {"date": "2026-03-19", "plays": 109, "graded": 75, "wins": 46, "losses": 29, "hr": 61.3, "t1": 2, "t1w": 1, "t2": 38, "t2w": 22, "games": 8}, {"date": "2026-03-20", "plays": 87, "graded": 71, "wins": 47, "losses": 24, "hr": 66.2, "t1": 2, "t1w": 1, "t2": 26, "t2w": 18, "games": 6}, {"date": "2026-03-21", "plays": 129, "graded": 0, "wins": 0, "losses": 0, "hr": 0, "t1": 0, "t1w": 0, "t2": 0, "t2w": 0, "games": 10}];
-const SN=DS.reduce((a,d)=>({g:a.g+d.graded,w:a.w+d.wins,l:a.l+d.losses,t1:a.t1+d.t1,t1w:a.t1w+d.t1w,t2:a.t2+d.t2,t2w:a.t2w+d.t2w,p:a.p+d.plays}),{g:0,w:0,l:0,t1:0,t1w:0,t2:0,t2w:0,p:0});
-let P=[],tab="daily",selMonth=null,selDate=null,df="all",rf="all",tf="all",exp=new Set();
-const B=window.location.pathname.replace(/\/index\.html$/,"").replace(/\/$/,"");
+
+// Plays loaded from server
+let P=[];
+
+// Loading screen
+document.getElementById('app').innerHTML='<div style="text-align:center;padding:60px 20px"><div style="font:800 22px var(--M);background:linear-gradient(135deg,var(--bl),var(--vi));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:12px">PropEdge</div><div id="lm" style="font:400 12px var(--S);color:var(--tx3);margin-bottom:16px">Loading full season...</div><div style="height:3px;background:var(--bg2);border-radius:2px;max-width:200px;margin:0 auto;overflow:hidden"><div style="height:100%;width:30%;background:linear-gradient(90deg,var(--bl),var(--vi));border-radius:2px;animation:pulse 1.2s ease-in-out infinite"></div></div></div>';
+
+const _B=window.location.pathname.replace(/\/index\.html$/,"").replace(/\/$/,"");
+async function _load(){
+  try{
+    document.getElementById("lm").textContent="Fetching data...";
+    const r=await fetch(_B+"/data/today.json?t="+Date.now());
+    if(!r.ok)throw new Error("HTTP "+r.status);
+    document.getElementById("lm").textContent="Parsing...";
+    P=await r.json();
+    P.sort((a,b)=>a.tier-b.tier||b.conf-a.conf);
+    // Set initial date to latest
+    const dates=[...new Set(P.map(p=>p.date))].sort();
+    di=dates.length-1;
+    R();
+  }catch(e){
+    document.getElementById("app").innerHTML='<div style="text-align:center;padding:40px"><div style="font:700 18px var(--M);color:var(--rd)">Load Error</div><div style="font:400 12px var(--S);color:var(--tx3);margin:12px 0">'+e.message+'</div><button onclick="location.reload()" style="padding:8px 20px;background:var(--blA);border:1px solid rgba(56,189,248,.3);color:var(--bl);border-radius:8px;font:500 11px var(--M);cursor:pointer">Retry</button></div>';
+  }
+}
+
+P.sort((a,b)=>a.tier-b.tier||b.conf-a.conf);
+
+let df="all",tf="all",mf="all",exp=new Set();
+
 const clr=(v,r)=>v==null?"var(--tx)":v>r?"var(--gr)":v<r?"var(--rd)":"var(--tx)";
 const hrc=r=>r>=55?"var(--gr)":r<=40?"var(--rd)":"var(--tx)";
+const dfc=r=>r>=20?"var(--gr)":r<=10?"var(--rd)":"var(--tx)";
 const cfc=c=>c>=.62?"var(--gr)":c>=.55?"var(--yl)":"var(--tx3)";
-const fmtD=d=>{try{const t=new Date(d+"T12:00:00");return{w:["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][t.getDay()],d:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][t.getMonth()]+" "+t.getDate()};}catch(e){return{w:"?",d:d};}};
-const fmtM=m=>{try{const[y,mo]=m.split("-");return["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][+mo]+" '"+y.slice(2);}catch(e){return m;}};
-function spark(d,ln,w=108,h=30){if(!d||d.length<2)return"";const p=4,mn=Math.min(...d,ln)-3,mx=Math.max(...d,ln)+3,rn=mx-mn||1;const x=i=>p+((d.length-1-i)/(d.length-1))*(w-p*2),y=v=>p+(1-(v-mn)/rn)*(h-p*2);return`<svg width="${w}" height="${h}" style="display:block"><line x1="${p}" y1="${y(ln)}" x2="${w-p}" y2="${y(ln)}" stroke="var(--yl)" stroke-width="1" stroke-dasharray="3,3" opacity=".4"/><polyline points="${d.map((v,i)=>x(i)+","+y(v)).join(" ")}" fill="none" stroke="var(--bl)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>${d.map((v,i)=>`<circle cx="${x(i)}" cy="${y(v)}" r="2.5" fill="${v>ln?"var(--gr)":"var(--rd)"}"/>`).join("")}</svg>`;}
 
-async function init(){const lm=document.getElementById("lm");try{lm.textContent="Fetching data...";const r=await fetch(B+"/data/today.json?t="+Date.now());if(!r.ok)throw new Error("HTTP "+r.status);lm.textContent="Parsing data...";P=await r.json();P.sort((a,b)=>(a.tier||9)-(b.tier||9)||(b.conf||0)-(a.conf||0));const months=[...new Set(P.map(p=>(p.date||"").substring(0,7)))].filter(Boolean).sort();selMonth=months[months.length-1]||"";const dates=[...new Set(P.filter(p=>(p.date||"").startsWith(selMonth)).map(p=>p.date))].sort();selDate=dates[dates.length-1]||"";R();}catch(e){document.getElementById("app").innerHTML=`<div style="text-align:center;padding:40px"><div style="font:700 18px var(--M);color:var(--rd);margin-bottom:12px">Error</div><div style="font:400 12px var(--S);color:var(--tx3);margin-bottom:16px">${e.message}</div><button onclick="location.reload()" style="padding:8px 20px;background:var(--blA);border:1px solid rgba(56,189,248,.3);color:var(--bl);border-radius:8px;font:500 11px var(--M);cursor:pointer">Retry</button></div>`;}}
+function spark(d,ln,w=108,h=30){
+if(!d||d.length<2)return"";
+const p=4,mn=Math.min(...d,ln)-3,mx=Math.max(...d,ln)+3,rn=mx-mn||1;
+const x=i=>p+((d.length-1-i)/(d.length-1))*(w-p*2);
+const y=v=>p+(1-(v-mn)/rn)*(h-p*2);
+return`<svg width="${w}" height="${h}" style="display:block"><line x1="${p}" y1="${y(ln)}" x2="${w-p}" y2="${y(ln)}" stroke="var(--yl)" stroke-width="1" stroke-dasharray="3,3" opacity=".4"/><polyline points="${d.map((v,i)=>x(i)+","+y(v)).join(" ")}" fill="none" stroke="var(--bl)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>${d.map((v,i)=>`<circle cx="${x(i)}" cy="${y(v)}" r="2.5" fill="${v>ln?"var(--gr)":"var(--rd)"}"/>`).join("")}</svg>`;
+}
 
-function R(){try{_R();}catch(e){document.getElementById("app").innerHTML=`<div style="padding:20px;color:var(--rd)">Error: ${e.message}<br><button onclick="location.reload()" style="margin-top:10px;padding:6px 14px;background:var(--bg1);border:1px solid var(--bg2);color:var(--tx);border-radius:6px;cursor:pointer">Reload</button></div>`;}}
+function R(){
+let fl=P;
+if(df==="over")fl=fl.filter(p=>p.dir==="OVER");
+if(df==="under")fl=fl.filter(p=>p.dir==="UNDER");
+if(tf==="1")fl=fl.filter(p=>p.tier===1);
+if(tf==="2")fl=fl.filter(p=>p.tier===2);
+if(mf!=="all")fl=fl.filter(p=>p.match===mf);
 
-function _R(){const months=[...new Set(P.map(p=>(p.date||"").substring(0,7)))].filter(Boolean).sort();if(!selMonth||!months.includes(selMonth))selMonth=months[months.length-1]||"";const mp=P.filter(p=>(p.date||"").startsWith(selMonth));const dates=[...new Set(mp.map(p=>p.date))].sort();if(!selDate||!dates.includes(selDate))selDate=dates[dates.length-1]||"";let dp=mp.filter(p=>p.date===selDate).sort((a,b)=>(a.tier||9)-(b.tier||9)||(b.conf||0)-(a.conf||0));let fl=dp;if(df==="over")fl=fl.filter(p=>p.dir==="OVER");if(df==="under")fl=fl.filter(p=>p.dir==="UNDER");if(rf==="win")fl=fl.filter(p=>p.result==="WIN");if(rf==="loss")fl=fl.filter(p=>p.result==="LOSS");if(tf==="1")fl=fl.filter(p=>p.tier===1);if(tf==="2")fl=fl.filter(p=>p.tier===2);const dg=dp.filter(p=>p.result==="WIN"||p.result==="LOSS");const dw=dg.filter(p=>p.result==="WIN").length;const dhr=dg.length?Math.round(dw/dg.length*1000)/10:0;const gm=[...new Set(dp.map(p=>p.match))];const isPre=dg.length===0;const shr=SN.g?Math.round(SN.w/SN.g*1000)/10:0;const st1=SN.t1?Math.round(SN.t1w/SN.t1*1000)/10:0;const st2=SN.t2?Math.round(SN.t2w/SN.t2*1000)/10:0;
-let h=`<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px"><div><div style="font:800 22px/1.1 var(--M);letter-spacing:-.5px;background:linear-gradient(135deg,var(--bl),var(--vi));-webkit-background-clip:text;-webkit-text-fill-color:transparent">PropEdge</div><div style="color:var(--tx2);font:400 11px var(--S);margin-top:3px">${P.length.toLocaleString()} plays &middot; 2025-26</div></div><div style="width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(56,189,248,.15),rgba(167,139,250,.15));border:1px solid rgba(56,189,248,.2);font:800 14px var(--M);color:var(--bl)">PE</div></div>`;
-h+=`<div style="display:flex;gap:2px;background:var(--bg1);border-radius:10px;padding:3px;margin-bottom:14px">${[["daily","Daily"],["season","Season"],["leaders","Leaders"]].map(([k,l])=>`<div onclick="sTab('${k}')" style="flex:1;padding:8px 4px;text-align:center;border-radius:8px;font:600 11px var(--M);color:${tab===k?"var(--bl)":"var(--tx3)"};background:${tab===k?"var(--bg2)":"transparent"};cursor:pointer">${l}</div>`).join("")}</div>`;
-h+=`<div style="display:flex;gap:8px;margin-bottom:12px;padding:8px 10px;background:var(--bg1);border-radius:10px;font:500 10px var(--M);color:var(--tx3);justify-content:space-around"><span>${SN.w}W/${SN.l}L</span><span>HR:<span style="color:${shr>=55?"var(--gr)":"var(--rd)"}">${shr}%</span></span><span>T1:<span style="color:var(--gr)">${st1}%</span></span><span>T2:<span style="color:var(--bl)">${st2}%</span></span></div>`;
-if(tab==="daily"){h+=`<div style="display:flex;gap:4px;overflow-x:auto;padding:4px 0 8px">${months.map(m=>`<div onclick="pickM('${m}')" style="flex-shrink:0;padding:7px 14px;border-radius:10px;background:${m===selMonth?"var(--blA)":"var(--bg1)"};border:1px solid ${m===selMonth?"rgba(56,189,248,.3)":"transparent"};cursor:pointer;font:600 11px var(--M);color:${m===selMonth?"var(--bl)":"var(--tx3)"}">${fmtM(m)}</div>`).join("")}</div>`;h+=`<div style="display:flex;gap:6px;overflow-x:auto;padding:4px 0 10px" id="dscr">${dates.map(d=>{const f=fmtD(d),ds=DS.find(x=>x.date===d),dr=ds&&ds.graded?ds.wins+"W/"+ds.losses+"L":"",dc_=ds&&ds.graded?(ds.wins>ds.losses?"var(--gr)":"var(--rd)"):"var(--tx3)";return`<div ${d===selDate?'id="adc"':""} onclick="pickD('${d}')" style="flex-shrink:0;padding:7px 14px;border-radius:10px;background:${d===selDate?"var(--blA)":"var(--bg1)"};border:1px solid ${d===selDate?"rgba(56,189,248,.3)":"transparent"};cursor:pointer;text-align:center;min-width:74px"><div style="font:700 11px var(--M);color:var(--tx)">${f.w}</div><div style="font:400 9px var(--M);color:var(--tx3);margin-top:1px">${f.d}</div>${dr?`<div style="font:600 8px var(--M);color:${dc_};margin-top:2px">${dr}</div>`:""}</div>`;}).join("")}</div>`;if(isPre){h+=`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px">${[[dp.length,"Props","var(--tx)"],[gm.length,"Games","var(--tx)"],[dp.filter(p=>p.tier<=2).length,"T1+T2","var(--gr)"]].map(([v,l,c])=>`<div style="background:var(--bg1);border-radius:10px;padding:10px;text-align:center"><div style="font:700 17px var(--M);color:${c}">${v}</div><div style="font:500 7px var(--M);color:var(--tx3);text-transform:uppercase;letter-spacing:.8px;margin-top:2px">${l}</div></div>`).join("")}</div>`;}else{h+=`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px">${[[dw+"W/"+(dg.length-dw)+"L","Record","var(--tx)"],[dhr+"%","HR",dhr>=55?"var(--gr)":"var(--rd)"],[dp.length,"Props","var(--tx)"]].map(([v,l,c])=>`<div style="background:var(--bg1);border-radius:10px;padding:10px;text-align:center"><div style="font:700 17px var(--M);color:${c}">${v}</div><div style="font:500 7px var(--M);color:var(--tx3);text-transform:uppercase;letter-spacing:.8px;margin-top:2px">${l}</div></div>`).join("")}</div>`;}h+=`<div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px">${[["all","All"],["over","O"],["under","U"]].map(([k,l])=>`<div onclick="df='${k}';R()" style="font:500 10px var(--M);padding:5px 11px;border-radius:8px;cursor:pointer;border:1px solid ${df===k?"rgba(56,189,248,.3)":"var(--bg2)"};background:${df===k?"var(--blA)":"var(--bg1)"};color:${df===k?"var(--bl)":"var(--tx3)"}">${l}</div>`).join("")}|${[["all","All"],["win","W"],["loss","L"]].map(([k,l])=>`<div onclick="rf='${k}';R()" style="font:500 10px var(--M);padding:5px 11px;border-radius:8px;cursor:pointer;border:1px solid ${rf===k?"rgba(167,139,250,.3)":"var(--bg2)"};background:${rf===k?"rgba(167,139,250,.13)":"var(--bg1)"};color:${rf===k?"var(--vi)":"var(--tx3)"}">${l}</div>`).join("")}|${[["all","All"],["1","T1"],["2","T2"]].map(([k,l])=>`<div onclick="tf='${k}';R()" style="font:500 10px var(--M);padding:5px 11px;border-radius:8px;cursor:pointer;border:1px solid ${tf===k?"rgba(52,211,153,.3)":"var(--bg2)"};background:${tf===k?"var(--grA)":"var(--bg1)"};color:${tf===k?"var(--gr)":"var(--tx3)"}">${l}</div>`).join("")}</div>`;h+=`<div style="font:400 9px var(--S);color:var(--tx3);margin-bottom:8px">${fl.length} plays &middot; Tap to expand</div>`;fl.forEach(p=>{h+=card(p);});}
-else if(tab==="season"){h+=`<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:14px">${[[SN.w+"W/"+SN.l+"L","Season","var(--tx)"],[shr+"%","HR",shr>=55?"var(--gr)":"var(--rd)"],[st1+"%","T1","var(--gr)"],[st2+"%","T2","var(--bl)"]].map(([v,l,c])=>`<div style="background:var(--bg1);border-radius:10px;padding:10px 4px;text-align:center"><div style="font:700 17px var(--M);color:${c}">${v}</div><div style="font:500 7px var(--M);color:var(--tx3);text-transform:uppercase;letter-spacing:.8px;margin-top:2px">${l}</div></div>`).join("")}</div>`;h+=`<div style="font:600 9px var(--M);color:var(--tx3);letter-spacing:1.2px;margin:4px 0 8px">HEATMAP</div><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:14px">${["S","M","T","W","T","F","S"].map(d=>`<div style="text-align:center;font:600 8px var(--M);color:var(--tx3);padding:2px">${d}</div>`).join("")}`;let pad=true;DS.forEach((d,i)=>{const dt=new Date(d.date+"T12:00:00");if(pad&&i===0){for(let j=0;j<dt.getDay();j++)h+=`<div></div>`;pad=false;}const hr=d.graded?Math.round(d.wins/d.graded*100):0;const bg=d.graded===0?"var(--bg1)":hr>=65?"rgba(52,211,153,.45)":hr>=55?"rgba(52,211,153,.2)":hr>=45?"rgba(251,191,36,.2)":"rgba(248,113,113,.3)";h+=`<div onclick="jD('${d.date}')" style="aspect-ratio:1;border-radius:5px;display:flex;align-items:center;justify-content:center;font:600 8px var(--M);cursor:pointer;background:${bg}">${dt.getDate()}</div>`;});h+=`</div>`;h+=`<div style="font:600 9px var(--M);color:var(--tx3);letter-spacing:1.2px;margin:14px 0 6px">MONTHLY</div>`;const mo={};DS.forEach(d=>{const m=d.date.substring(0,7);if(!mo[m])mo[m]={g:0,w:0,l:0,t1:0,t1w:0};const mm=mo[m];mm.g+=d.graded;mm.w+=d.wins;mm.l+=d.losses;mm.t1+=d.t1;mm.t1w+=d.t1w;});Object.entries(mo).forEach(([m,v])=>{const mhr=v.g?Math.round(v.w/v.g*1000)/10:0;h+=`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:var(--bg1);border-radius:8px;margin-bottom:4px"><span style="font:600 11px var(--M)">${m}</span><span style="font:500 10px var(--M);color:var(--tx2)">${v.w}W/${v.l}L</span><span style="font:700 12px var(--M);color:${mhr>=55?"var(--gr)":"var(--rd)"}">${mhr}%</span></div>`;});}
-else{const pm={};P.forEach(p=>{if((p.tier||9)>2||!p.result)return;if(!pm[p.player])pm[p.player]={n:0,w:0};pm[p.player].n++;if(p.result==="WIN")pm[p.player].w++;});let ld=Object.entries(pm).map(([n,s])=>({n,p:s.n,w:s.w,h:Math.round(s.w/s.n*1000)/10})).filter(x=>x.p>=3).sort((a,b)=>b.h-a.h);h+=`<div style="font:600 9px var(--M);color:var(--tx3);letter-spacing:1.2px;margin-bottom:10px">TOP PLAYERS</div>`;ld.slice(0,50).forEach((p,i)=>{const c=p.h>=65?"var(--gr)":p.h>=55?"var(--bl)":"var(--rd)";h+=`<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg1);border-radius:8px;margin-bottom:3px"><span style="font:700 10px var(--M);color:var(--tx3);min-width:22px">${i+1}</span><span style="font:600 11px var(--S);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.n}</span><span style="font:500 9px var(--M);color:var(--tx2)">${p.p}p</span><div style="width:55px;height:7px;background:var(--bg2);border-radius:4px;overflow:hidden"><div style="width:${Math.min(100,p.h)}%;height:100%;background:${c};border-radius:4px"></div></div><span style="font:700 11px var(--M);color:${c};min-width:38px;text-align:right">${p.h}%</span></div>`;});}
-document.getElementById("app").innerHTML=h;setTimeout(()=>{const el=document.getElementById("adc");if(el)el.scrollIntoView({behavior:"auto",inline:"center",block:"nearest"});},60);}
+const gm=[...new Set(P.map(p=>p.match))];
+const t1=P.filter(p=>p.tier===1).length;
+const t2=P.filter(p=>p.tier===2).length;
+const graded=P.filter(p=>p.result==="WIN"||p.result==="LOSS");
+const isPreGame=graded.length===0;
 
-function card(p){const ov=p.dir==="OVER",un=p.dir==="UNDER";const bdr=ov?"var(--gr)":un?"var(--rd)":"var(--tx4)";const bg=p.result==="WIN"?"rgba(6,78,59,.2)":p.result==="LOSS"?"rgba(69,10,10,.2)":"rgba(12,18,32,.7)";const dBg=ov?"var(--grA)":un?"var(--rdA)":"rgba(148,163,184,.12)";const dC=ov?"var(--gr)":un?"var(--rd)":"var(--tx2)";const tC=p.tier===1?"var(--gr)":p.tier===2?"var(--yl)":"var(--tx4)";const tBg=p.tier===1?"var(--grA)":p.tier===2?"var(--ylA)":"rgba(148,163,184,.06)";const flagC=(p.flags||0)>=8?"var(--gr)":(p.flags||0)>=6?"var(--yl)":"var(--rd)";const k=(p.player+"_"+p.date+"_"+p.line).replace(/'/g,"\\'");const o=exp.has(p.player+"_"+p.date+"_"+p.line);const odds=p.dir==="OVER"?p.overOdds:p.underOdds;let h=`<div onclick="tgl('${k}')" style="border-radius:12px;padding:11px 13px;margin-bottom:7px;cursor:pointer;border-left:3px solid ${bdr};background:${bg}"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div style="flex:1"><div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap"><span style="font:700 9px var(--M);padding:1px 7px;border-radius:8px;background:${dBg};color:${dC}">${p.dir==="NO PLAY"?(p.rawDir||""):p.dir}</span><span style="font-weight:600;font-size:13px">${p.player||""}</span><span style="font:700 8px var(--M);padding:2px 5px;border-radius:4px;background:${tBg};color:${tC}">T${p.tier||"?"}</span>${p.flagsStr?`<span style="font:700 9px var(--M);padding:2px 6px;border-radius:4px;background:rgba(56,189,248,.08);color:${flagC}">${p.flagsStr}</span>`:""}</div><div style="font-size:9px;color:var(--tx2);margin-top:2px">${p.match||""} &middot; ${Math.round((p.conf||.5)*100)}%</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">`;if(p.result==="WIN")h+=`<span style="font:800 10px var(--M);padding:2px 8px;border-radius:5px;background:var(--grA);color:var(--gr)">WIN</span>`;else if(p.result==="LOSS")h+=`<span style="font:800 10px var(--M);padding:2px 8px;border-radius:5px;background:var(--rdA);color:var(--rd)">LOSS</span>`;else h+=`<span style="font:600 10px var(--M);color:var(--tx3)">${p.units||0}u</span>`;if(p.actualPts!=null)h+=`<span style="font:400 10px var(--M);color:var(--tx2)">${Math.round(p.actualPts)}pts</span>`;if(p.edge!=null){const ec=p.edge>0?"var(--gr)":"var(--tx3)";h+=`<span style="font:600 9px var(--M);color:${ec}">${p.edge>0?"+":""}${p.edge}%</span>`;}h+=`</div></div>`;h+=`<div style="display:flex;align-items:center;gap:10px;margin-top:8px">${[["Line",p.line,"var(--tx)"],["L30",p.l30,clr(p.l30,p.line)],["HR",p.hr30+"%",hrc(p.hr30||50)],["Odds",odds||"-","var(--tx)"]].map(([k,v,c])=>`<div style="text-align:center"><div style="font:500 7px var(--M);color:var(--tx3)">${k}</div><div style="font:700 14px var(--M);color:${c}">${v!=null?v:"-"}</div></div>`).join("")}<div style="margin-left:auto">${spark(p.recent,p.line)}</div></div>`;const cf=Math.max(0,Math.min(100,(((p.conf||.5)-.45)/.4)*100));h+=`<div style="display:flex;align-items:center;gap:6px;margin-top:6px"><div style="flex:1;height:4px;background:var(--bg2);border-radius:2px;overflow:hidden"><div style="width:${cf}%;height:100%;background:${cfc(p.conf||.5)};border-radius:2px"></div></div><span style="font:700 10px var(--M);color:${cfc(p.conf||.5)}">${Math.round((p.conf||.5)*100)}%</span></div>`;if(p.recent&&p.recent.length)h+=`<div style="display:flex;gap:5px;margin-top:5px">${p.recent.map(v=>`<span style="font:600 9px var(--M);color:${v>p.line?"var(--gr)":"var(--rd)"}">${v}</span>`).join("")}${p.recentOver!=null?`<span style="font:400 8px var(--M);color:var(--tx3);margin-left:4px">(${p.recentOver}/${p.recent.length}ov)</span>`:""}</div>`;if(o){h+=`<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--bg2);animation:fadeIn .25s ease-out"><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-bottom:8px">${[["L30",p.l30],["L10",p.l10],["L5",p.l5],["L3",p.l3]].map(([k,v])=>`<div style="text-align:center"><div style="font:500 7px var(--M);color:var(--tx3)">${k}</div><div style="font:700 13px var(--M);color:${clr(v,p.line)}">${v||"-"}</div></div>`).join("")}</div><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-bottom:8px">${[["DEF","#"+(p.defP||"?")],["PACE","#"+(p.pace||"?")],["FG%",p.fgL30?p.fgL30+"%":"-"],["MIN",p.minL30||"-"]].map(([k,v])=>`<div style="text-align:center"><div style="font:500 7px var(--M);color:var(--tx3)">${k}</div><div style="font:700 13px var(--M)">${v}</div></div>`).join("")}</div><div style="background:var(--bg);border-radius:8px;padding:9px;display:flex;gap:8px;flex-wrap:wrap;font:400 11px var(--S);color:var(--tx2);border:1px solid rgba(56,189,248,.04)">`;if(p.overOdds)h+=`<span>O:${p.overOdds}</span>`;if(p.underOdds)h+=`<span>U:${p.underOdds}</span>`;if(p.spread!=null)h+=`<span>Spr:${p.spread>0?"+":""}${p.spread}</span>`;if(p.total!=null)h+=`<span>Tot:${p.total}</span>`;if(p.blowout)h+=`<span style="color:var(--yl)">Blowout</span>`;if(p.h2hG>0)h+=`<span style="color:var(--vi)">H2H:${p.h2h}</span>`;if(p.homeAvgPts)h+=`<span>Hm:${p.homeAvgPts}</span>`;if(p.awayAvgPts)h+=`<span>Aw:${p.awayAvgPts}</span>`;if(p.playerModelHR)h+=`<span>Plyr:${p.playerModelHR}%</span>`;if(p.bucketHR)h+=`<span>Sim:${p.bucketHR}%</span>`;h+=`</div></div>`;}h+=`<div style="text-align:center;font:400 8px var(--S);color:var(--tx4);margin-top:4px">${o?"\u25B2":"\u25BC"}</div></div>`;return h;}
+let h=`<div class="hdr"><div><div class="hdr-t">PropEdge</div><div class="hdr-s">March 21, 2026 &middot; ${gm.length} games &middot; ${P.length} props${isPreGame?" &middot; PRE-GAME":""}  </div></div><div class="logo">PE</div></div>`;
 
-function sTab(t){tab=t;df="all";rf="all";tf="all";R();}
-function pickM(m){selMonth=m;selDate=null;df="all";rf="all";tf="all";exp.clear();R();}
-function pickD(d){selDate=d;df="all";rf="all";tf="all";exp.clear();R();}
-function jD(d){tab="daily";selMonth=d.substring(0,7);selDate=d;df="all";rf="all";tf="all";exp.clear();R();}
+// Stats
+if(isPreGame){
+  h+=`<div class="stats">
+    <div class="st"><div class="st-v">${P.length}</div><div class="st-l">Props</div></div>
+    <div class="st"><div class="st-v">${gm.length}</div><div class="st-l">Games</div></div>
+    <div class="st"><div class="st-v" style="color:var(--gr)">${t1}</div><div class="st-l">Tier 1</div></div>
+    <div class="st"><div class="st-v" style="color:var(--yl)">${t2}</div><div class="st-l">Tier 2</div></div>
+  </div>`;
+} else {
+  const w=graded.filter(p=>p.result==="WIN").length;
+  h+=`<div class="stats">
+    <div class="st"><div class="st-v">${w}W/${graded.length-w}L</div><div class="st-l">Record</div></div>
+    <div class="st"><div class="st-v" style="color:${Math.round(w/graded.length*100)>=55?"var(--gr)":"var(--rd)"}">${Math.round(w/graded.length*1000)/10}%</div><div class="st-l">Hit Rate</div></div>
+    <div class="st"><div class="st-v" style="color:var(--gr)">${t1}</div><div class="st-l">Tier 1</div></div>
+    <div class="st"><div class="st-v" style="color:var(--yl)">${t2}</div><div class="st-l">Tier 2</div></div>
+  </div>`;
+}
+
+// Filters
+h+=`<div class="fl">${[["all","All"],["over","Over"],["under","Under"]].map(([k,l])=>`<div class="pl ${df===k?"bl":""}" onclick="df='${k}';R()">${l}</div>`).join("")}<div style="width:1px;background:var(--bg2);margin:0 2px"></div>${[["all","All Tiers"],["1","\u2605 T1 (2u)"],["2","T2 (1u)"]].map(([k,l])=>`<div class="pl ${tf===k?"gr":""}" onclick="tf='${k}';R()">${l}</div>`).join("")}</div>`;
+h+=`<div class="fl"><div class="pl ${mf==="all"?"yl":""}" onclick="mf='all';R()">All Games</div>${gm.map(g=>`<div class="pl ${mf===g?"yl":""}" onclick="mf='${g.replace(/'/g,"\\'")}';R()">${g}</div>`).join("")}</div>`;
+
+h+=`<div style="display:flex;gap:10px;font:400 9px var(--S);color:var(--tx3);margin-bottom:8px;padding:0 2px"><span>\u25CF <span style="color:var(--gr)">Over</span></span><span>\u25CF <span style="color:var(--rd)">Under</span></span><span>--- <span style="color:var(--yl)">Line</span></span><span style="margin-left:auto">Tap to expand</span></div>`;
+
+if(fl.length===0) h+=`<div class="ld">No plays match filter</div>`;
+else fl.forEach(p=>{h+=card(p);});
+
+h+=`<div class="ft"><strong style="color:var(--tx2)">Model:</strong> 10-signal engine. Tier 1 &ge; 62% conf (2u) &middot; Tier 2 &ge; 55% (1u). Odds in decimal format. Flags show signal agreement count.</div>`;
+
+document.getElementById("app").innerHTML=h;
+}
+
+function card(p){
+const ov=p.dir==="OVER",un=p.dir==="UNDER";
+const bdr=ov?"og":un?"ug":"";
+const dBg=ov?"var(--grA)":un?"var(--rdA)":"rgba(148,163,184,.12)";
+const dC=ov?"var(--gr)":un?"var(--rd)":"var(--tx2)";
+const dl=p.dir==="NO PLAY"?(p.rawDir||"\u2014"):p.dir;
+const k=p.player+"_"+p.line;
+const o=exp.has(k);
+const tBg=p.tier===1?"var(--grA)":p.tier===2?"var(--ylA)":"rgba(148,163,184,.06)";
+const tC=p.tier===1?"var(--gr)":p.tier===2?"var(--yl)":"var(--tx4)";
+const flagC=p.flags>=8?"var(--gr)":p.flags>=6?"var(--yl)":"var(--rd)";
+
+let h=`<div class="cd ${bdr}" onclick="tgl('${k.replace(/'/g,"\\'")}')">`;
+
+// Top row
+h+=`<div style="display:flex;justify-content:space-between;align-items:flex-start">
+<div style="flex:1">
+  <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap">
+    <span style="font:700 9px var(--M);padding:1px 7px;border-radius:8px;background:${dBg};color:${dC}">${dl}</span>
+    <span style="font-weight:600;font-size:13px">${p.player}</span>
+    <span style="font:700 8px var(--M);padding:2px 5px;border-radius:4px;background:${tBg};color:${tC}">T${p.tier}</span>
+    <span style="font:700 9px var(--M);padding:2px 6px;border-radius:4px;background:rgba(56,189,248,.08);color:${flagC}">${p.flagsStr}</span>
+  </div>
+  <div style="font-size:9px;color:var(--tx2);margin-top:2px">${p.match} &middot; ${p.gameTime} &middot; ${p.position} &middot; ${Math.round(p.conf*100)}% conf</div>
+</div>
+<div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">`;
+
+// Result or pre-game
+if(p.result==="WIN")h+=`<span style="font:800 10px var(--M);padding:2px 8px;border-radius:5px;background:var(--grA);color:var(--gr)">WIN</span>`;
+else if(p.result==="LOSS")h+=`<span style="font:800 10px var(--M);padding:2px 8px;border-radius:5px;background:var(--rdA);color:var(--rd)">LOSS</span>`;
+else h+=`<span style="font:600 10px var(--M);color:var(--tx3)">${p.units}u</span>`;
+
+if(p.actualPts!=null) h+=`<span style="font:400 10px var(--M);color:var(--tx2)">Actual: ${Math.round(p.actualPts)}</span>`;
+if(p.edge!=null){
+  const ec=p.edge>0?"var(--gr)":p.edge<-3?"var(--rd)":"var(--tx3)";
+  h+=`<span style="font:600 9px var(--M);color:${ec}">Edge: ${p.edge>0?"+":""}${p.edge}%</span>`;
+}
+h+=`</div></div>`;
+
+// Key stats + sparkline
+h+=`<div style="display:flex;align-items:center;gap:10px;margin-top:8px">
+${[["Line",p.line,"var(--tx)"],["L30",p.l30,clr(p.l30,p.line)],["HR%",p.hr30+"%",hrc(p.hr30)]].map(([k,v,c])=>`<div class="kv"><div class="kv-l">${k}</div><div class="kv-v" style="color:${c}">${v||"-"}</div></div>`).join("")}
+<div class="kv"><div class="kv-l">Odds</div><div class="kv-v" style="font-size:12px">${p.dir==="OVER"?(p.overOdds||"-"):(p.underOdds||"-")}</div></div>
+<div style="margin-left:auto">${spark(p.recent,p.line)}</div></div>`;
+
+// Conf bar
+const cf=Math.max(0,Math.min(100,((p.conf-.45)/.4)*100));
+h+=`<div style="display:flex;align-items:center;gap:6px;margin-top:6px">
+<span style="font:500 7px var(--M);color:var(--tx3);text-transform:uppercase;letter-spacing:.5px">Conf</span>
+<div style="flex:1;height:4px;background:var(--bg2);border-radius:2px;overflow:hidden"><div style="width:${cf}%;height:100%;background:${cfc(p.conf)};border-radius:2px"></div></div>
+<span style="font:700 10px var(--M);color:${cfc(p.conf)};min-width:30px;text-align:right">${Math.round(p.conf*100)}%</span></div>`;
+
+// Recent scores
+if(p.recent&&p.recent.length) h+=`<div style="display:flex;gap:5px;margin-top:5px">${p.recent.map(v=>`<span style="font:600 9px var(--M);color:${v>p.line?"var(--gr)":"var(--rd)"}">${v}</span>`).join("")}<span style="font:400 8px var(--M);color:var(--tx3);margin-left:4px">(${p.recentOver||0}/${p.recent.length} over)</span></div>`;
+
+// Expanded view
+if(o){
+h+=`<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--bg2);animation:fadeIn .25s ease-out">`;
+
+// Pre-match reasoning
+if(p.preMatchReason) h+=`<div class="rsn" style="margin-bottom:8px;border-left:2px solid var(--bl)"><strong style="color:var(--bl);font-size:10px">\u{1F4CA} MODEL ANALYSIS</strong><br>${p.preMatchReason}</div>`;
+
+// Flags detail
+h+=`<div class="sec">Signal Flags (${p.flagsStr})</div><div class="flag-grid">`;
+if(p.flagDetails) p.flagDetails.forEach(f=>{
+  if(f.agrees===null) return;
+  h+=`<div class="flag ${f.agrees?"flag-y":"flag-n"}">${f.agrees?"\u2713":"\u2717"} ${f.name}</div>`;
+});
+h+=`</div>`;
+
+// Scoring averages
+h+=`<div class="sec">Scoring Averages</div><div class="g4">${[["L30",p.l30],["L10",p.l10],["L5",p.l5],["L3",p.l3]].map(([k,v])=>`<div class="kv"><div class="kv-l">${k}</div><div class="kv-v" style="color:${clr(v,p.line)};font-size:13px">${v||"-"}</div></div>`).join("")}</div>`;
+
+// Matchup
+h+=`<div class="sec">Matchup Context</div><div class="g4">${[["DEF POS","#"+p.defP,dfc(p.defP)],["PACE","#"+p.pace,"var(--tx)"],["HR L30",p.hr30+"%",hrc(p.hr30)],["HR L10",p.hr10+"%",hrc(p.hr10)]].map(([k,v,c])=>`<div class="kv"><div class="kv-l">${k}</div><div class="kv-v" style="color:${c};font-size:13px">${v}</div></div>`).join("")}</div>`;
+
+// Shooting + Minutes
+h+=`<div class="sec">Shooting & Minutes</div><div class="g4">${[["FG L30",p.fgL30?p.fgL30+"%":"-"],["FG L10",p.fgL10?p.fgL10+"%":"-"],["MIN L30",p.minL30||"-"],["MIN L10",p.minL10||"-"]].map(([k,v])=>`<div class="kv"><div class="kv-l">${k}</div><div class="kv-v" style="color:var(--tx);font-size:13px">${v}</div></div>`).join("")}</div>`;
+
+// Betting context
+h+=`<div class="sec">Betting Context</div><div class="ctx">`;
+h+=`<span>Over: ${p.overOdds||"-"}</span><span>Under: ${p.underOdds||"-"}</span>`;
+h+=`<span>Books: ${p.books}</span>`;
+if(p.lineSpread!=null) h+=`<span>Line range: ${p.minLine}-${p.maxLine}</span>`;
+if(p.impliedProb) h+=`<span>Implied: ${p.impliedProb}%</span>`;
+if(p.edge!=null) h+=`<span style="color:${p.edge>0?"var(--gr)":"var(--rd)"}">Edge: ${p.edge>0?"+":""}${p.edge}%</span>`;
+h+=`</div>`;
+
+// Game context
+h+=`<div class="ctx">`;
+if(p.spread!=null) h+=`<span>Spread: ${p.spread>0?"+":""}${p.spread}</span>`;
+if(p.total!=null) h+=`<span>Total: ${p.total}</span>`;
+if(p.blowout) h+=`<span style="color:var(--yl)">\u26A0 Blowout Risk</span>`;
+if(p.h2hG>0) h+=`<span style="color:var(--vi)">H2H: ${p.h2h}</span>`;
+if(p.std10>0) h+=`<span>\u03C3: ${p.std10}</span>`;
+h+=`</div>`;
+
+// Home/Away + B2B
+h+=`<div class="ctx">`;
+if(p.homeAvgPts) h+=`<span>Home avg: ${p.homeAvgPts}</span>`;
+if(p.awayAvgPts) h+=`<span>Away avg: ${p.awayAvgPts}</span>`;
+if(p.b2bAvgPts) h+=`<span>B2B avg: ${p.b2bAvgPts}</span>`;
+if(p.restAvgPts) h+=`<span>Rest avg: ${p.restAvgPts}</span>`;
+h+=`</div>`;
+
+// Historical model accuracy
+if(p.playerModelHR||p.bucketHR){
+  h+=`<div class="ctx">`;
+  if(p.playerModelHR) h+=`<span>Model on this player: ${p.playerModelHR}% (${p.playerModelPlays}p)</span>`;
+  if(p.bucketHR) h+=`<span>Similar plays: ${p.bucketHR}% (${p.bucketPlays}p)</span>`;
+  h+=`</div>`;
+}
+
+// Post-match reason
+if(p.reason&&p.result) h+=`<div class="rsn" style="border-left:2px solid ${p.result==="WIN"?"var(--gr)":"var(--rd)"}"><strong style="color:${p.result==="WIN"?"var(--gr)":"var(--rd)"};font-size:10px">\u{1F3AF} RESULT ANALYSIS</strong><br>${p.reason}</div>`;
+
+h+=`</div>`;
+}
+
+h+=`<div style="text-align:center;font:400 8px var(--S);color:var(--tx4);margin-top:4px;letter-spacing:1px">${o?"\u25B2":"\u25BC"}</div></div>`;
+return h;
+}
+
 function tgl(k){if(exp.has(k))exp.delete(k);else exp.add(k);R();}
-init();
+R();
+
+_load();
 </script>
 </body>
 </html>
